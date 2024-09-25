@@ -29,10 +29,10 @@ while not found:
     value = int(lines[middle])
     if value == int(lines[middle-1]):
         low = middle+1
-        middle = low+(high-low)//2
+        middle = low-1+(high-low)//2
     elif value == int(lines[middle+1]):
         high = middle-1
-        middle = low+(high-low)//2
+        middle = low+1+(high-low)//2
     else:
         print(value)
         found = True
