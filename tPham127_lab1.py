@@ -1,8 +1,8 @@
 import sys
 
 filename = sys.argv[1]
-file = open(filename, 'r')
-lines = file.readlines()
+with open(filename, 'r') as file:
+    lines = file.readlines()
 
 found = False  
 low = 0
