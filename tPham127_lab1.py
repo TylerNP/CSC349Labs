@@ -12,8 +12,6 @@ if middle == 0:
     print(lines[middle].strip())
     found = True
 
-step = 0
-
 while not found:
     side_checked = 1
     adjustment = 0
@@ -22,10 +20,8 @@ while not found:
         side_checked = -1
         adjustment = 1
 
-    step += 1
-    print(f"STEP {step}: |{low}|{middle}|{high}|{lines[middle]}")
     value = int(lines[middle])
-    if middle == 0 or middle == len(lines)-1 or low == high:
+    if low >= high:
         found = True
         print(value)
         break
