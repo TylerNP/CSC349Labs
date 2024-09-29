@@ -8,6 +8,8 @@ found = False
 low = 0
 high = len(lines)-1 
 middle = high//2
+if high == -1:
+    found = True
 if middle == 0:
     print(lines[middle].strip())
     found = True
