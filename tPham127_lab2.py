@@ -16,12 +16,8 @@ class node:
 		self.component = component
 
 def strong_connectivity(G):
-	max = order(G)
-	#assign(G, max)
-	visits = [ (n.name, n.previsit, n.postvisit, n.component) for n in G ]
-	print(max)
-	print(visits)
-	components = [ [n.name] for n in G]
+	indexes = order(G)
+	components = assign(G, indexes)
 	sort_component_list(components)
 	return components
 
@@ -38,13 +34,6 @@ def order(G : list[node]) -> list[node]:
 			counter = explore_out(G, index, counter, sorted_list)
 	return sorted_list
 
-def assign(G : list[node], counter : int) -> int:
-	component_count = 0
-	for index in range(len(G)):
-		component_count = component_count + 1
-		if G[index].postvisit == counter: 
-			counter = explore_in(G, index, component_count, counter)
-	
 def explore_out(G : list[node], vertex : int, accumulator : int, sorted_list : list[int]) -> int:
 	G[vertex].previsit = accumulator
 	accumulator = accumulator + 1
@@ -56,17 +45,26 @@ def explore_out(G : list[node], vertex : int, accumulator : int, sorted_list : l
 	accumulator = accumulator + 1
 	return accumulator
 
-def explore_in(G : list[node], vertex : int, group : int, count : int) -> int:
-	G[vertex].component = group
-	max_post = count
-	max_post = count - 1
-	for neighbor in G[vertex].in_edges:
-		if G[neighbor].postvisit != max_post:
-			max_post = explore_in(G, neighbor, group, max_post)
+def assign(G : list[node], indexes : list[int]) -> list[list[int]]:
+	component_count = 0
+	component_list = []
+	for index in range(len(indexes)-1, -1, -1):
+		if G[indexes[index]].component == None:
+			component_count = component_count + 1
+			subgroup = []
+			explore_in(G, indexes[index], component_count, subgroup)
+			component_list.append(subgroup)
+	return component_list
 
-	return max_post
+def explore_in(G : list[node], vertex : int, group : int, vertices : list[int]) -> None:
+	G[vertex].component = group
+	vertices.append(G[vertex].name)
+	for neighbor in G[vertex].in_edges:
+		if G[neighbor].component == None:
+			explore_in(G, neighbor, group, vertices)
 
 def read_file(filename):
+
 	with open(filename) as f:
 		lines = f.readlines()
 		v = int(lines[0])
