@@ -25,6 +25,12 @@ def sort_component_list(components):
 		c.sort()
 	components.sort(key = lambda x: x[0])
 
+def order(G):
+	return 0
+
+def assign(G):
+	return 0
+
 def read_file(filename):
 	with open(filename) as f:
 		lines = f.readlines()
