@@ -17,7 +17,9 @@ class node:
 
 def strong_connectivity(G):
 	max = order(G)
-	visits = [ (n.name, n.previsit, n.postvisit) for n in G ]
+	#assign(G, max)
+	visits = [ (n.name, n.previsit, n.postvisit, n.component) for n in G ]
+	print(max)
 	print(visits)
 	components = [ [n.name] for n in G]
 	sort_component_list(components)
@@ -28,34 +30,41 @@ def sort_component_list(components):
 		c.sort()
 	components.sort(key = lambda x: x[0])
 
-def order(G : list[node]) -> None:
+def order(G : list[node]) -> list[node]:
 	counter = 1
+	sorted_list = []
 	for index in range(len(G)):
 		if G[index].previsit == -1:
-			counter = explore_out(G, index, counter)
+			counter = explore_out(G, index, counter, sorted_list)
+	return sorted_list
 
-def assign(G : list[node]) -> int:
+def assign(G : list[node], counter : int) -> int:
 	component_count = 0
 	for index in range(len(G)):
 		component_count = component_count + 1
-		if G[index].postvisit == 0:
-			explore_in(G, index, component_count)
+		if G[index].postvisit == counter: 
+			counter = explore_in(G, index, component_count, counter)
 	
-def explore_out(G : list[node], vertex : int, accumulator : int) -> int:
+def explore_out(G : list[node], vertex : int, accumulator : int, sorted_list : list[int]) -> int:
 	G[vertex].previsit = accumulator
 	accumulator = accumulator + 1
 	for neighbor in G[vertex].out_edges:
 		if G[neighbor].previsit == -1:
-			accumulator = explore_out(G, neighbor, accumulator)
+			accumulator = explore_out(G, neighbor, accumulator, sorted_list)
 	G[vertex].postvisit = accumulator
+	sorted_list.append(vertex)
 	accumulator = accumulator + 1
 	return accumulator
 
-def explore_in(G : list[node], vertex : int, group : int) -> None:
+def explore_in(G : list[node], vertex : int, group : int, count : int) -> int:
 	G[vertex].component = group
+	max_post = count
+	max_post = count - 1
 	for neighbor in G[vertex].in_edges:
-		if G[neighbor].previsit:
-			explore_in(G, neighbor, group)
+		if G[neighbor].postvisit != max_post:
+			max_post = explore_in(G, neighbor, group, max_post)
+
+	return max_post
 
 def read_file(filename):
 	with open(filename) as f:
