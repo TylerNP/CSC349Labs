@@ -16,7 +16,7 @@ class node:
 		self.component = component
 
 def strong_connectivity(G):
-	order(G)
+	max = order(G)
 	visits = [ (n.name, n.previsit, n.postvisit) for n in G ]
 	print(visits)
 	components = [ [n.name] for n in G]
@@ -35,8 +35,11 @@ def order(G : list[node]) -> None:
 			counter = explore_out(G, index, counter)
 
 def assign(G : list[node]) -> int:
-	
-	return 0
+	component_count = 0
+	for index in range(len(G)):
+		component_count = component_count + 1
+		if G[index].postvisit == 0:
+			explore_in(G, index, component_count)
 	
 def explore_out(G : list[node], vertex : int, accumulator : int) -> int:
 	G[vertex].previsit = accumulator
