@@ -17,6 +17,8 @@ class node:
 
 def strong_connectivity(G):
 	order(G)
+	visits = [ (n.name, n.previsit, n.postvisit) for n in G ]
+	print(visits)
 	components = [ [n.name] for n in G]
 	sort_component_list(components)
 	return components
@@ -28,27 +30,29 @@ def sort_component_list(components):
 
 def order(G : list[node]) -> None:
 	counter = 1
-	for node in G:
-		if node.previst == -1:
-			explore_out(node, counter)
+	for index in range(len(G)):
+		if G[index].previsit == -1:
+			counter = explore_out(G, index, counter)
 
-def assign(G : list[node]) -> None:
-	component_count = 1
-	for node in G:
-		explore_in(node, component_count)
+def assign(G : list[node]) -> int:
+	
 	return 0
 	
-def explore_out(node : node, accumulator : int) -> None:
-	node.previsit = accumulator
+def explore_out(G : list[node], vertex : int, accumulator : int) -> int:
+	G[vertex].previsit = accumulator
 	accumulator = accumulator + 1
-	for neighbor in node:
-		if node.previsit == -1:
-			explore_out(neighbor, accumulator)
-	node.postvisit = accumulator
+	for neighbor in G[vertex].out_edges:
+		if G[neighbor].previsit == -1:
+			accumulator = explore_out(G, neighbor, accumulator)
+	G[vertex].postvisit = accumulator
 	accumulator = accumulator + 1
+	return accumulator
 
-def explore_in(node : node, accumulator : int) -> None:
-	return 0
+def explore_in(G : list[node], vertex : int, group : int) -> None:
+	G[vertex].component = group
+	for neighbor in G[vertex].in_edges:
+		if G[neighbor].previsit:
+			explore_in(G, neighbor, group)
 
 def read_file(filename):
 	with open(filename) as f:
