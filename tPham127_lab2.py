@@ -16,6 +16,7 @@ class node:
 		self.component = component
 
 def strong_connectivity(G):
+	order(G)
 	components = [ [n.name] for n in G]
 	sort_component_list(components)
 	return components
@@ -25,10 +26,28 @@ def sort_component_list(components):
 		c.sort()
 	components.sort(key = lambda x: x[0])
 
-def order(G):
-	return 0
+def order(G : list[node]) -> None:
+	counter = 1
+	for node in G:
+		if node.previst == -1:
+			explore_out(node, counter)
 
-def assign(G):
+def assign(G : list[node]) -> None:
+	component_count = 1
+	for node in G:
+		explore_in(node, component_count)
+	return 0
+	
+def explore_out(node : node, accumulator : int) -> None:
+	node.previsit = accumulator
+	accumulator = accumulator + 1
+	for neighbor in node:
+		if node.previsit == -1:
+			explore_out(neighbor, accumulator)
+	node.postvisit = accumulator
+	accumulator = accumulator + 1
+
+def explore_in(node : node, accumulator : int) -> None:
 	return 0
 
 def read_file(filename):
