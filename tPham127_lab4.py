@@ -159,7 +159,7 @@ def matching(G):
 	#G.V = sorted(G.V, key=lambda x: G.degree(x), reverse=True) # sort by maximal degree
 	while any(len(G.E[v]) > 0 for v in G.V):
 		u,v = G.get_edge()
-		print(u, v)
+		#print(u, v)
 		G.remove_vertex(u)
 		G.remove_vertex(v)
 		C.add(v)
