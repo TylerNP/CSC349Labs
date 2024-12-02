@@ -138,16 +138,18 @@ def is_vertex_cover(G,subset):
 # Method stub incorrect behavior: adds all vertices to the cover and removes it from the graph 
 def greedy(G):	
 	C = set() # Add nodes of maximum degree here
-	#G.V = sorted(G.V, key=lambda x: G.degree(x), reverse=True) # sort by maximal degree
-	while sorted(G.V, key=lambda x: G.degree(x), reverse=True):
-		v = next(iter(G.V)) # use this to avoid changing G.V while inside a for loop over G.V
-		#print(v)
-		while G.E[v]:
-			u = next(iter(G.E[v]))
-			G.remove_vertex(u)
-		G.remove_vertex(v)
-		C.add(v)
-		
+	while G.count_edges() > 0:
+		# GET MAX degree vertex
+		max_v = None
+		for v in G.V:
+			if not max_v:
+				max_v = v
+				continue
+			if G.degree(max_v) < G.degree(v):
+				max_v = v 
+		#print(max_v)
+		C.add(max_v)
+		G.remove_vertex(max_v)
 	return C 
 
 # Method stub for the matching algorithm
@@ -160,10 +162,10 @@ def matching(G):
 	while any(len(G.E[v]) > 0 for v in G.V):
 		u,v = G.get_edge()
 		#print(u, v)
-		G.remove_vertex(u)
-		G.remove_vertex(v)
 		C.add(v)
 		C.add(u)
+		G.remove_vertex(u)
+		G.remove_vertex(v)
 	return C
 
 def main():
